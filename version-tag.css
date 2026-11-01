@@ -62,6 +62,13 @@
   font-variation-settings: normal;
 }
 
+.version-tag-version {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-weight: 600;
+  color: rgba(246, 239, 224, 0.72);
+}
+
 .version-tag-updated-line {
   flex: 0 0 auto;
   white-space: nowrap;
