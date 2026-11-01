@@ -29,11 +29,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,100,0;1,9..144,400..700,100,1&family=Jost:wght@400;500;600&family=Noto+Serif+SC:wght@500;700&display=swap"
+      id="fonts-latin"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..600,100,0;1,9..144,400..600,100,1&family=Jost:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css?v=12" />
-    <link rel="stylesheet" href="version-tag.css" />
+    <link rel="stylesheet" href="style.css?v=13" />
+    <link rel="stylesheet" href="version-tag.css?v=1" />
   </head>
 
   <body>
@@ -118,17 +119,13 @@
 
       <footer>
         <p id="footer"></p>
-        <small class="copyright"
-          ><span id="copyright"></span
-          ><span class="footer-sep" aria-hidden="true"> · </span
-          ><span id="app-version-root" class="footer-version"></span
-        ></small>
+        <small id="app-version-root" class="copyright"></small>
       </footer>
     </main>
     <script src="build-info.js"></script>
-    <script src="version-tag.js"></script>
+    <script src="version-tag.js?v=1"></script>
     <script src="countdown.js"></script>
-    <script src="script.js?v=16"></script>
+    <script src="script.js?v=17"></script>
     <!--
       Cloudflare Web Analytics (cookieless RUM) is NOT inlined here on purpose.
       Zone soholocal.nl already has the Web Analytics site provisioned with
