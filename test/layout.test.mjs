@@ -65,14 +65,45 @@ describe("eyebrow styling", () => {
 });
 
 describe("cache-busting", () => {
-  it("references bumped style.css and script.js versions", () => {
-    assert.match(html, /style\.css\?v=12/, "style.css query not bumped");
-    assert.match(html, /script\.js\?v=16/, "script.js query not bumped");
+  it("references bumped style.css, script.js, and version-tag assets", () => {
+    assert.match(html, /style\.css\?v=13/, "style.css query not bumped");
+    assert.match(html, /script\.js\?v=17/, "script.js query not bumped");
+    assert.match(html, /version-tag\.css\?v=1/, "version-tag.css query missing");
+    assert.match(html, /version-tag\.js\?v=1/, "version-tag.js query missing");
   });
 
-  it("carries no stale pre-0.2.2 query strings", () => {
-    assert.doesNotMatch(html, /style\.css\?v=11/);
-    assert.doesNotMatch(html, /script\.js\?v=(13|14|15)/);
+  it("carries no stale pre-0.2.6 query strings", () => {
+    assert.doesNotMatch(html, /style\.css\?v=1[12]/);
+    assert.doesNotMatch(html, /script\.js\?v=(13|14|15|16)/);
+  });
+});
+
+describe("footer version UX", () => {
+  it("mounts the copyright control without a visible version span", () => {
+    assert.match(html, /<small id="app-version-root" class="copyright"><\/small>/);
+    assert.doesNotMatch(html, /footer-version/);
+    assert.doesNotMatch(html, /footer-sep/);
+    assert.doesNotMatch(html, /id="copyright"/);
+  });
+});
+
+describe("google fonts", () => {
+  it("loads Fraunces 400..600 + Jost by default, without Noto", () => {
+    assert.match(
+      html,
+      /id="fonts-latin"/,
+      "default fonts link should be tagged fonts-latin"
+    );
+    assert.match(
+      html,
+      /Fraunces:ital,opsz,wght,SOFT,WONK@0,9\.\.144,400\.\.600,100,0;1,9\.\.144,400\.\.600,100,1/
+    );
+    assert.match(html, /family=Jost:wght@400;500;600/);
+    assert.doesNotMatch(
+      html,
+      /Noto\+Serif\+SC/,
+      "Noto must not ship in the default render-blocking fonts link"
+    );
   });
 });
 
