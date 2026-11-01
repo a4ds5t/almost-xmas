@@ -1,13 +1,13 @@
 # Version tag component
 
-The footer shows a clickable version label (`v0.1.4`). Activating it opens a compact popover: one line with the build timestamp (Europe/Amsterdam, date, time and short zone name), a muted middle dot separator, and a changelog link (`Updated … · Changelog`). On narrow viewports the link may wrap directly under the date with no extra gap.
+The footer copyright/credit line is a subtle clickable control. Activating it opens a compact popover with the version (`v0.2.6`), the build timestamp (Europe/Amsterdam), and a release-notes link to `CHANGELOG.md` on GitHub (`a4ds5t/almost-xmas`). The version number is not shown on the page until the copyright line is opened.
 
 ## Files
 
 | File | Role |
 |------|------|
 | `version-tag.js` | Popover behaviour and Amsterdam timestamp formatting |
-| `version-tag.css` | Layout for the tag and popover |
+| `version-tag.css` | Layout for the control and popover |
 | `build-info.js` | Generated `BUILD_TIMESTAMP_ISO` (UTC ISO string), loaded before `script.js` |
 | `scripts/generate-build-info.js` | Writes `build-info.js` at build/deploy time |
 
@@ -21,9 +21,9 @@ Wrangler runs the build command before upload:
 
 So `wrangler deploy` and `wrangler deploy --dry-run` refresh `build-info.js` without a manual step. The app reads `BUILD_TIMESTAMP_ISO` and formats it in the browser with `Intl` and `timeZone: 'Europe/Amsterdam'`.
 
-If `build-info.js` is missing (for example opening `index.html` via `file://`), the tag still shows `v{APP_VERSION}` and the popover omits the timestamp line.
+If `build-info.js` is missing (for example opening `index.html` via `file://`), the copyright control still works and the popover shows the version without a timestamp.
 
-`APP_VERSION` in `script.js` is the version source; bump it by hand between releases.
+`APP_VERSION` in `script.js` is the version source; bump it by hand between releases. Public changelog links use `https://github.com/a4ds5t/almost-xmas/blob/main/CHANGELOG.md`.
 
 ## Reusing in another app
 
@@ -36,13 +36,14 @@ initVersionTag({
   root: document.getElementById('my-version-root'),
   version: '1.0.0',
   buildIso: typeof BUILD_TIMESTAMP_ISO !== 'undefined' ? BUILD_TIMESTAMP_ISO : null,
-  changelogUrl: 'https://example.com/changelog',
+  changelogUrl: 'https://github.com/a4ds5t/almost-xmas/blob/main/CHANGELOG.md',
+  label: '© 2026 Santa Claus. All rights reserved.',
   strings: {
     updatedLabel: 'Updated',
-    changelogLabel: 'Changelog',
-    tagAria: 'Version {v}, show update details',
+    changelogLabel: 'Release notes',
+    tagAria: 'Show version {v} and release notes',
   },
 })
 ```
 
-4. Pass translated `strings` when the UI language changes (`update()` on the returned handle).
+4. Pass translated `label` / `strings` when the UI language changes (`update()` on the returned handle).
