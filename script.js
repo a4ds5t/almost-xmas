@@ -1,7 +1,9 @@
 // Texts per language
-const APP_VERSION = "0.2.4";
+const APP_VERSION = "0.2.6";
 const CHANGELOG_URL = "https://github.com/a4ds5t/almost-xmas/blob/main/CHANGELOG.md";
 const APP_BUILD_ISO = typeof BUILD_TIMESTAMP_ISO !== "undefined" ? BUILD_TIMESTAMP_ISO : null;
+const NOTO_SERIF_SC_HREF =
+  "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap";
 
 var TEXT = {
   nl: {
@@ -15,8 +17,8 @@ var TEXT = {
     footer: "Het is bijna kerst, zelfs in {month}.",
     copyright: "De Kerstman. Alle rechten voorbehouden.",
     versionUpdated: "Bijgewerkt",
-    versionChangelog: "Changelog",
-    versionTagAria: "Versie {v}, toon updategegevens"
+    versionChangelog: "Release notes",
+    versionTagAria: "Toon versie {v} en release notes"
   },
   en: {
     locale: "en-GB", langLabel: "Language",
@@ -29,8 +31,8 @@ var TEXT = {
     footer: "It’s almost Christmas, even in {month}.",
     copyright: "Santa Claus. All rights reserved.",
     versionUpdated: "Updated",
-    versionChangelog: "Changelog",
-    versionTagAria: "Version {v}, show update details"
+    versionChangelog: "Release notes",
+    versionTagAria: "Show version {v} and release notes"
   },
   es: {
     locale: "es-ES", langLabel: "Idioma",
@@ -43,8 +45,8 @@ var TEXT = {
     footer: "Es casi Navidad, incluso en {month}.",
     copyright: "Papá Noel. Todos los derechos reservados.",
     versionUpdated: "Actualizado",
-    versionChangelog: "Registro de cambios",
-    versionTagAria: "Versión {v}, mostrar detalles de la actualización"
+    versionChangelog: "Notas de la versión",
+    versionTagAria: "Mostrar versión {v} y notas de la versión"
   },
   zh: {
     locale: "zh-CN", htmlLang: "zh-CN", langLabel: "语言",
@@ -57,8 +59,8 @@ var TEXT = {
     footer: "即使是{month}，也快到圣诞节了。",
     copyright: "圣诞老人。保留所有权利。",
     versionUpdated: "更新于",
-    versionChangelog: "更新日志",
-    versionTagAria: "版本 {v}，显示更新详情"
+    versionChangelog: "发布说明",
+    versionTagAria: "显示版本 {v} 和发布说明"
   }
 };
 
@@ -88,6 +90,19 @@ function detectLanguage() {
 var lang = detectLanguage();
 var versionTagHandle = null;
 
+// Noto Serif SC is only painted for zh. Keep it out of the default render-blocking
+// Google Fonts link and inject the stylesheet the first time Chinese is active.
+function ensureNotoSerifSC() {
+  if (document.getElementById("fonts-noto-sc")) return;
+  var link = document.createElement("link");
+  link.id = "fonts-noto-sc";
+  link.rel = "stylesheet";
+  link.href = NOTO_SERIF_SC_HREF;
+  document.head.appendChild(link);
+}
+
+if (lang === "zh") ensureNotoSerifSC();
+
 function versionTagStrings(t) {
   return {
     updatedLabel: t.versionUpdated,
@@ -96,20 +111,26 @@ function versionTagStrings(t) {
   };
 }
 
-function applyVersionTag() {
+function copyrightLine(t, today) {
+  return "© " + today.getFullYear() + " " + t.copyright;
+}
+
+function applyVersionTag(today) {
   var root = document.getElementById("app-version-root");
   if (!root || typeof initVersionTag !== "function") return;
   var t = TEXT[lang];
+  var label = copyrightLine(t, today || new Date());
   if (!versionTagHandle) {
     versionTagHandle = initVersionTag({
       root: root,
       version: APP_VERSION,
       buildIso: APP_BUILD_ISO,
       changelogUrl: CHANGELOG_URL,
+      label: label,
       strings: versionTagStrings(t)
     });
   } else {
-    versionTagHandle.update({ strings: versionTagStrings(t) });
+    versionTagHandle.update({ label: label, strings: versionTagStrings(t) });
   }
 }
 
@@ -145,7 +166,7 @@ function update() {
   document.title = christmas ? t.xmasHeadline : t.headline;
   setText("christmas", t.christmas);
   setText("footer", footerLine(t, today));
-  setText("copyright", "© " + today.getFullYear() + " " + t.copyright);
+  applyVersionTag(today);
   document.getElementById("countdown").hidden = christmas;
   document.getElementById("christmas").hidden = !christmas;
   if (christmas) return;
@@ -184,6 +205,7 @@ function markLanguage() {
 // Switch without reloading, but keep the address bar on the shareable ?lang= link
 function setLanguage(code) {
   lang = code;
+  if (code === "zh") ensureNotoSerifSC();
   try {
     localStorage.setItem("lang", code);
   } catch (e) {}
@@ -192,7 +214,6 @@ function setLanguage(code) {
   } catch (e) {}
   markLanguage();
   update();
-  applyVersionTag();
 }
 
 document.querySelector(".lang-switch").addEventListener("click", function (e) {
@@ -201,8 +222,6 @@ document.querySelector(".lang-switch").addEventListener("click", function (e) {
   e.preventDefault();
   setLanguage(link.dataset.lang);
 });
-
-applyVersionTag();
 
 // Show the page in the detected language without saving it as a choice
 markLanguage();
