@@ -2,8 +2,6 @@
 
 Simple Javascript program that **counts down** to the next Christmass!
 
-Ongoing work continues here; this public tree replaces [a4ds5t/Xmas-Countdown](https://github.com/a4ds5t/Xmas-Countdown) as the source of truth.
-
 This repository holds the static site and thin Cloudflare Worker for **Almost Christmas**. Production is **https://xmas.soholocal.nl** (Worker + custom domain). See [docs/Development.md](docs/Development.md) for local run, tests, and release notes.
 
 ## Layout
