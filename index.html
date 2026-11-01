@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Almost Christmas</title>
+    <meta name="description" content="A live countdown to Christmas, in English, Dutch, Spanish and Chinese." />
+    <meta name="theme-color" content="#0f2a1f" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="canonical" href="https://xmas.soholocal.nl/" />
+    <link rel="alternate" hreflang="en" href="https://xmas.soholocal.nl/?lang=en" />
+    <link rel="alternate" hreflang="nl" href="https://xmas.soholocal.nl/?lang=nl" />
+    <link rel="alternate" hreflang="es" href="https://xmas.soholocal.nl/?lang=es" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://xmas.soholocal.nl/?lang=zh" />
+    <link rel="alternate" hreflang="x-default" href="https://xmas.soholocal.nl/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Almost Christmas" />
+    <meta property="og:title" content="Almost Christmas" />
+    <meta property="og:description" content="A live countdown to Christmas, in English, Dutch, Spanish and Chinese." />
+    <meta property="og:url" content="https://xmas.soholocal.nl/" />
+    <meta property="og:image" content="https://xmas.soholocal.nl/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Almost Christmas: countdown tiles for days, hours, minutes and seconds on a pine-green background with Christmas baubles." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a4ds5t" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,100,0;1,9..144,400..700,100,1&family=Jost:wght@400;500;600&family=Noto+Serif+SC:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=12" />
+    <link rel="stylesheet" href="version-tag.css" />
+  </head>
+
+  <body>
+    <main>
+      <div class="decor" aria-hidden="true">
+        <div class="bokeh b1"></div>
+        <div class="bokeh b2"></div>
+        <div class="bokeh b3"></div>
+        <div class="bokeh b4"></div>
+        <div class="bokeh glow"></div>
+        <div class="bauble bauble-red">
+          <div class="string"></div>
+          <div class="cap"></div>
+          <div class="ball"></div>
+        </div>
+        <div class="bauble bauble-gold">
+          <div class="string"></div>
+          <div class="cap"></div>
+          <div class="ball"></div>
+        </div>
+      </div>
+
+      <div class="lang-switch" role="group" aria-label="Language">
+        <a href="?lang=nl" data-lang="nl" lang="nl" hreflang="nl" title="Nederlands">NL</a>
+        <a href="?lang=en" data-lang="en" lang="en" hreflang="en" title="English">EN</a>
+        <a href="?lang=es" data-lang="es" lang="es" hreflang="es" title="Español">ES</a>
+        <a href="?lang=zh" data-lang="zh" lang="zh-CN" hreflang="zh-Hans" title="简体中文">中文</a>
+      </div>
+
+      <section class="hero">
+        <div class="title-group">
+          <p id="current_date" class="eyebrow"></p>
+          <h1 id="headline">Almost Christmas</h1>
+        </div>
+
+        <div id="countdown" class="countdown">
+          <p class="weeks"><span id="before"></span><strong id="weeks"></strong><span id="after"></span></p>
+          <div class="ribbon-row">
+            <div class="ribbon" aria-hidden="true"></div>
+            <div id="counter" class="tiles" role="timer" aria-live="off">
+              <div class="tile"><span class="value" id="days"></span><span class="label" id="days_label"></span></div>
+              <div class="tile"><span class="value" id="hours"></span><span class="label" id="hours_label"></span></div>
+              <div class="tile"><span class="value" id="minutes"></span><span class="label" id="minutes_label"></span></div>
+              <div class="tile"><span class="value" id="seconds"></span><span class="label" id="seconds_label"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <p id="christmas" class="christmas" hidden></p>
+      </section>
+
+      <div class="santa-band" aria-hidden="true">
+        <div class="sleigh">
+          <svg width="520" height="121" viewBox="0 0 600 140" aria-hidden="true" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <defs>
+              <g id="reindeer">
+                <ellipse cx="0" cy="0" rx="22" ry="9" stroke="none" />
+                <path d="M14 -4 L25 -18 L32 -15 L21 1 Z" stroke="none" />
+                <ellipse cx="32" cy="-18" rx="8" ry="4.5" stroke="none" />
+                <path d="M28 -21 L23 -34 L17 -38 M23 -34 L27 -41 M32 -22 L33 -35 L38 -40 M33 -35 L30 -41" fill="none" stroke-width="2" />
+                <path d="M-15 5 L-30 13 M-9 6 L-21 18 M11 6 L26 14 M16 5 L33 8" fill="none" stroke-width="3" />
+                <path d="M-22 -2 L-28 -6" fill="none" stroke-width="3" />
+              </g>
+            </defs>
+            <g transform="translate(10 70)">
+              <path d="M-4 52 L100 52 Q116 52 120 40" fill="none" stroke-width="3" />
+              <path d="M8 46 L8 52 M88 46 L88 52" fill="none" stroke-width="3" />
+              <path d="M0 22 Q0 46 20 46 L100 46 Q112 46 112 30 L114 6 L104 6 L98 22 Z" stroke="none" />
+              <circle cx="28" cy="12" r="15" stroke="none" />
+              <path d="M50 24 Q52 4 64 4 Q78 4 80 24 Z" stroke="none" />
+              <circle cx="65" cy="-6" r="8" stroke="none" />
+              <path d="M58 -10 L66 -26 L74 -10 Z" stroke="none" />
+              <path d="M112 14 L238 -2" fill="none" stroke-width="1.5" />
+            </g>
+            <use href="#reindeer" transform="translate(270 70)" />
+            <use href="#reindeer" transform="translate(345 60)" />
+            <use href="#reindeer" transform="translate(420 50)" />
+            <use href="#reindeer" transform="translate(495 40)" />
+          </svg>
+        </div>
+      </div>
+
+      <footer>
+        <p id="footer"></p>
+        <small class="copyright"
+          ><span id="copyright"></span
+          ><span class="footer-sep" aria-hidden="true"> · </span
+          ><span id="app-version-root" class="footer-version"></span
+        ></small>
+      </footer>
+    </main>
+    <script src="build-info.js"></script>
+    <script src="version-tag.js"></script>
+    <script src="countdown.js"></script>
+    <script src="script.js?v=16"></script>
+    <!--
+      Cloudflare Web Analytics (cookieless RUM) is NOT inlined here on purpose.
+      Zone soholocal.nl already has the Web Analytics site provisioned with
+      auto_install: true, so Cloudflare injects the beacon into HTML responses at
+      the edge. Adding the snippet by hand would double-count every pageview.
+      There is a test in test/layout.test.mjs that fails if a beacon is inlined.
+      See docs/Development.md -> "Web analytics" for how to verify it and what
+      to do if auto-install is ever switched off.
+    -->
+  </body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "xmas-countdown",
+  "private": true,
+  "version": "0.2.4",
+  "description": "Thin Cloudflare Worker + static assets for the Almost Christmas countdown. Dry-run / local dev only.",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "check": "wrangler deploy --dry-run",
+    "test": "node --test test/redirect.test.mjs test/countdown.test.mjs test/layout.test.mjs test/ignore-files.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.152.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

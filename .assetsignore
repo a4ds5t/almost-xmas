@@ -1,0 +1,37 @@
+# Repo files that are not part of the static site upload (Worker + ASSETS only).
+# Keep in sync with .gitignore — both files must cover the same secret patterns.
+# assets.directory is the repo root, so anything not listed here AND not a real
+# public asset is served to the world.
+node_modules
+.git
+.github
+.wrangler
+.vscode
+.dev.vars
+package.json
+package-lock.json
+wrangler.jsonc
+worker.js
+test
+test/**
+scripts
+scripts/**
+docs
+docs/**
+readme.md
+README.md
+.gitignore
+.assetsignore
+CHANGELOG.md
+LICENSE
+NOTICE
+.DS_Store
+
+# Secrets — mirror of .gitignore. Never upload these even if one appears.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*

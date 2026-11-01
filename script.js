@@ -1,0 +1,212 @@
+// Texts per language
+const APP_VERSION = "0.2.4";
+const CHANGELOG_URL = "https://github.com/a4ds5t/almost-xmas/blob/main/CHANGELOG.md";
+const APP_BUILD_ISO = typeof BUILD_TIMESTAMP_ISO !== "undefined" ? BUILD_TIMESTAMP_ISO : null;
+
+var TEXT = {
+  nl: {
+    locale: "nl-NL", langLabel: "Taal",
+    today: "Vandaag is het ", headline: "Bijna Kerst", xmasHeadline: "Fijne Kerst",
+    before: "Nog ", after: ", of precies:",
+    week: ["week", "weken"], day: ["dag", "dagen"], and: " en ",
+    units: [["dag", "dagen"], ["uur", "uur"], ["minuut", "minuten"], ["seconde", "seconden"]],
+    christmas: "Het is zover. Fijne feestdagen!",
+    months: ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"],
+    footer: "Het is bijna kerst, zelfs in {month}.",
+    copyright: "De Kerstman. Alle rechten voorbehouden.",
+    versionUpdated: "Bijgewerkt",
+    versionChangelog: "Changelog",
+    versionTagAria: "Versie {v}, toon updategegevens"
+  },
+  en: {
+    locale: "en-GB", langLabel: "Language",
+    today: "Today is ", headline: "Almost Christmas", xmasHeadline: "Merry Christmas",
+    before: "Just ", after: " to go, or exactly:",
+    week: ["week", "weeks"], day: ["day", "days"], and: " and ",
+    units: [["day", "days"], ["hour", "hours"], ["minute", "minutes"], ["second", "seconds"]],
+    christmas: "It’s here. Happy holidays!",
+    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    footer: "It’s almost Christmas, even in {month}.",
+    copyright: "Santa Claus. All rights reserved.",
+    versionUpdated: "Updated",
+    versionChangelog: "Changelog",
+    versionTagAria: "Version {v}, show update details"
+  },
+  es: {
+    locale: "es-ES", langLabel: "Idioma",
+    today: "Hoy es ", headline: "Casi Navidad", xmasHeadline: "Feliz Navidad",
+    before: "Faltan ", after: ", o exactamente:",
+    week: ["semana", "semanas"], day: ["día", "días"], and: " y ",
+    units: [["día", "días"], ["hora", "horas"], ["minuto", "minutos"], ["segundo", "segundos"]],
+    christmas: "¡Ya está aquí! ¡Felices fiestas!",
+    months: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
+    footer: "Es casi Navidad, incluso en {month}.",
+    copyright: "Papá Noel. Todos los derechos reservados.",
+    versionUpdated: "Actualizado",
+    versionChangelog: "Registro de cambios",
+    versionTagAria: "Versión {v}, mostrar detalles de la actualización"
+  },
+  zh: {
+    locale: "zh-CN", htmlLang: "zh-CN", langLabel: "语言",
+    today: "今天是", headline: "圣诞将至", xmasHeadline: "圣诞快乐",
+    before: "还有 ", after: "，确切地说：",
+    week: ["周", "周"], day: ["天", "天"], and: "零 ",
+    units: [["天", "天"], ["小时", "小时"], ["分钟", "分钟"], ["秒", "秒"]],
+    christmas: "圣诞节到了！节日快乐！",
+    months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+    footer: "即使是{month}，也快到圣诞节了。",
+    copyright: "圣诞老人。保留所有权利。",
+    versionUpdated: "更新于",
+    versionChangelog: "更新日志",
+    versionTagAria: "版本 {v}，显示更新详情"
+  }
+};
+
+// Language from the link (?lang=en), then the saved choice, then the first browser language
+// that is nl, en, es or zh; otherwise English
+function urlLanguage() {
+  var match = /[?&]lang=([a-z]{2})/i.exec(location.search);
+  var code = match && match[1].toLowerCase();
+  return TEXT[code] ? code : null;
+}
+
+function detectLanguage() {
+  var fromUrl = urlLanguage();
+  if (fromUrl) return fromUrl;
+  try {
+    var saved = localStorage.getItem("lang");
+    if (TEXT[saved]) return saved;
+  } catch (e) {}
+  var list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""];
+  for (var i = 0; i < list.length; i++) {
+    var code = String(list[i]).slice(0, 2).toLowerCase();
+    if (TEXT[code]) return code;
+  }
+  return "en";
+}
+
+var lang = detectLanguage();
+var versionTagHandle = null;
+
+function versionTagStrings(t) {
+  return {
+    updatedLabel: t.versionUpdated,
+    changelogLabel: t.versionChangelog,
+    tagAria: t.versionTagAria
+  };
+}
+
+function applyVersionTag() {
+  var root = document.getElementById("app-version-root");
+  if (!root || typeof initVersionTag !== "function") return;
+  var t = TEXT[lang];
+  if (!versionTagHandle) {
+    versionTagHandle = initVersionTag({
+      root: root,
+      version: APP_VERSION,
+      buildIso: APP_BUILD_ISO,
+      changelogUrl: CHANGELOG_URL,
+      strings: versionTagStrings(t)
+    });
+  } else {
+    versionTagHandle.update({ strings: versionTagStrings(t) });
+  }
+}
+
+function plural(pair, n) {
+  return pair[n == 1 ? 0 : 1];
+}
+
+function two(n) {
+  return n < 10 ? "0" + n : "" + n;
+}
+
+function setText(id, text) {
+  document.getElementById(id).textContent = text;
+}
+
+// Footer names the visitor's current local month, the same Date the countdown uses.
+function footerLine(t, today) {
+  return t.footer.replace("{month}", t.months[today.getMonth()]);
+}
+
+// Christmas we count down to — 25 December, local time — comes from countdown.js,
+// which also holds the generic nextOccurrence() primitive the Easter/Pentecost pages
+// will reuse. From 26 December it rolls to next year; second Christmas day is not
+// treated as Christmas, because countries differ on it.
+function update() {
+  var t = TEXT[lang];
+  var today = new Date();
+  var christmas = XmasCountdown.isChristmasDay(today);
+
+  document.documentElement.lang = t.htmlLang || lang;
+  setText("current_date", t.today + today.toLocaleDateString(t.locale, { weekday: "long", day: "numeric", month: "long", year: "numeric" }));
+  setText("headline", christmas ? t.xmasHeadline : t.headline);
+  document.title = christmas ? t.xmasHeadline : t.headline;
+  setText("christmas", t.christmas);
+  setText("footer", footerLine(t, today));
+  setText("copyright", "© " + today.getFullYear() + " " + t.copyright);
+  document.getElementById("countdown").hidden = christmas;
+  document.getElementById("christmas").hidden = !christmas;
+  if (christmas) return;
+
+  // DST-safe wall-clock split, computed in countdown.js
+  var remaining = XmasCountdown.getRemaining(today);
+  var days = remaining.days;
+  var weeks = Math.floor(days / 7);
+  var rest = days % 7;
+
+  setText("before", t.before);
+  setText("weeks", weeks + " " + plural(t.week, weeks) + (rest ? t.and + rest + " " + plural(t.day, rest) : ""));
+  setText("after", t.after);
+  setText("days", "" + days);
+  setText("hours", two(remaining.hours));
+  setText("minutes", two(remaining.minutes));
+  setText("seconds", two(remaining.seconds));
+  setText("days_label", plural(t.units[0], days));
+  setText("hours_label", plural(t.units[1], remaining.hours));
+  setText("minutes_label", plural(t.units[2], remaining.minutes));
+  setText("seconds_label", plural(t.units[3], remaining.seconds));
+}
+
+function markLanguage() {
+  var links = document.querySelectorAll(".lang-switch a");
+  for (var i = 0; i < links.length; i++) {
+    if (links[i].dataset.lang == lang) {
+      links[i].setAttribute("aria-current", "true");
+    } else {
+      links[i].removeAttribute("aria-current");
+    }
+  }
+  document.querySelector(".lang-switch").setAttribute("aria-label", TEXT[lang].langLabel);
+}
+
+// Switch without reloading, but keep the address bar on the shareable ?lang= link
+function setLanguage(code) {
+  lang = code;
+  try {
+    localStorage.setItem("lang", code);
+  } catch (e) {}
+  try {
+    history.replaceState(null, "", "?lang=" + code + location.hash);
+  } catch (e) {}
+  markLanguage();
+  update();
+  applyVersionTag();
+}
+
+document.querySelector(".lang-switch").addEventListener("click", function (e) {
+  var link = e.target.closest("a[data-lang]");
+  if (!link || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  e.preventDefault();
+  setLanguage(link.dataset.lang);
+});
+
+applyVersionTag();
+
+// Show the page in the detected language without saving it as a choice
+markLanguage();
+update();
+
+// Update the count down every 1 second
+setInterval(update, 1000);

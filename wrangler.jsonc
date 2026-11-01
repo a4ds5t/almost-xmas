@@ -1,0 +1,36 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Thin Worker + ASSETS for Almost Christmas. Local dev and dry-run only — no
+  // custom domain routes until Infra preview after Armand-go (Production UIT).
+  //
+  // Layout: static files at the repository root. Wrangler uploads that same
+  // root (`assets.directory`) with `run_worker_first` so every request hits the
+  // Worker for Observability, then static files via env.ASSETS.fetch.
+  // `.assetsignore` drops repo metadata from the asset upload.
+  //
+  // Canonical hostname: xmas.soholocal.nl (HTML + sitemap). Legacy preview host
+  // is 301-redirected in worker.js; custom domain routes are added in a later go.
+  "name": "xmas-countdown",
+  "main": "worker.js",
+  // Only the custom domain xmas.soholocal.nl serves this site. Without these two
+  // keys Wrangler defaults to publishing <name>.<subdomain>.workers.dev (world
+  // readable) and a preview URL for every version upload.
+  "workers_dev": false,
+  "preview_urls": false,
+  "compatibility_date": "2026-10-25",
+  "build": {
+    "command": "node scripts/generate-build-info.js"
+  },
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "none"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 0.01 }
+  }
+}

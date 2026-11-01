@@ -1,0 +1,16 @@
+# Keep in sync with .assetsignore — both files must cover the same secret patterns.
+# This file stops secrets being committed; .assetsignore stops them being uploaded
+# as public static assets (assets.directory is the repo root).
+.vscode
+node_modules/
+.wrangler/
+.dev.vars
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*
+.DS_Store
+build-info.js
