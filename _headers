@@ -1,0 +1,27 @@
+# Applied to ASSETS responses that skip the Worker (selective run_worker_first).
+# Worker-handled HTML still sets security + Cache-Control in worker.js.
+
+/*
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self'
+
+# Fingerprinted / cache-busted static assets (?v=N on CSS/JS; fonts are path-stable).
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.css
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.js
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.svg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.ico
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.png
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400

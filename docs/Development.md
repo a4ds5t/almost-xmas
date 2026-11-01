@@ -4,9 +4,9 @@ How this site is built, run locally, and released.
 
 ## Production hosting
 
-The live site runs on a **Cloudflare Worker** with static assets via the `ASSETS` binding, on the custom domain **https://xmas.soholocal.nl**. Deploy with Wrangler when Infra routes are in place. Requests to the legacy hostname `almost-xmas.soholocal.nl` get a **301** to the same path and query on `xmas.soholocal.nl` (see `worker.js`).
+The live site runs on a **Cloudflare Worker** with static assets via the `ASSETS` binding. Custom domains **https://xmas.soholocal.nl** (canonical in HTML/sitemap) and **https://almost-xmas.soholocal.nl** both map to the `xmas-countdown` Worker and serve the same content — there is no inter-host 301, so document TTFB is a single edge fetch on either hostname. Deploy with Wrangler when Infra routes are in place.
 
-Repo-only files (Worker, tests, scripts, docs, npm metadata) stay out of the asset upload via `.assetsignore`.
+Repo-only files (Worker, tests, scripts, docs, npm metadata) stay out of the asset upload via `.assetsignore`. Selective `run_worker_first` keeps CSS/JS/fonts/images on the ASSETS path (see `_headers`); HTML navigations and retired `/kerst` paths still hit `worker.js`.
 
 `.gitignore` (never commit a secret) and `.assetsignore` (never *upload* one as a public asset) are
 kept in sync: both cover `.dev.vars`, `.env`, `.env.*`, `*.pem`, `*.key`, `*.p12`, `*.pfx` and
@@ -40,7 +40,7 @@ draft copy you would not put on the live domain, because the upload itself makes
 
 ## Layout
 
-Static files live at the repository root (`index.html`, `script.js`, `style.css`, …). Wrangler `assets.directory` points at the repo root; `run_worker_first` sends every request through the Worker first.
+Static files live at the repository root (`index.html`, `script.js`, `style.css`, `fonts/`, …). Wrangler `assets.directory` points at the repo root. `run_worker_first` is limited to `/`, `/index.html`, and `/kerst` paths so static assets skip the Worker; `_headers` sets cache and security headers on those asset responses.
 
 The root page is a single column grid on `main` with three rows: the hero block centred in the
 free space, a reserved sleigh band, and the footer (closing line + copyright) anchored to the
@@ -61,12 +61,22 @@ on one line instead of wrapping and costing a whole extra row of height.
 ## Asset cache-busting (required before every deploy)
 
 `style.css` and `script.js` are referenced from `index.html` with a `?v=N` query. Cloudflare serves
-static assets with caching, and the HTML is what busts it, so **every change to a `.css` or `.js`
+static assets with caching (`_headers` allows a week for CSS/JS; fonts under `/fonts/` are
+immutable), and the HTML is what busts CSS/JS, so **every change to a `.css` or `.js`
 asset must ship with a bumped `?v=` in `index.html`** in the same commit (`style.css?v=11` →
 `?v=12`). Without the bump, returning visitors keep the cached old file and the change is invisible
 to them — exactly the audience a countdown site has. Bump only assets whose content actually
 changed. `countdown.js` is stable today; `version-tag.js` / `version-tag.css` carry `?v=` when
-they change (as of 0.2.6). `build-info.js` is generated per deploy and must not be versioned.
+they change. Self-hosted font filenames under `fonts/` are treated as immutable — rename the file
+(and update `style.css` + the LCP preload) if a face binary changes. `build-info.js` is generated
+per deploy and must not be versioned.
+
+## Fonts / LCP
+
+Latin UI fonts (Fraunces + Jost) are self-hosted under `fonts/` and declared with `@font-face` in
+`style.css`. `index.html` preloads `fonts/fraunces-italic-latin.woff2` because `#headline` is the
+primary LCP node. Noto Serif SC is still loaded from Google Fonts, but only when the page language
+is Chinese (`script.js` → `ensureNotoSerifSC()`).
 
 ## Countdown logic
 `countdown.js` is the single source of the Christmas rollover. `getChristmasTarget(now)` returns
@@ -121,7 +131,7 @@ double-count pageviews.
 npm test
 ```
 
-`test/redirect.test.mjs` covers the legacy-host 301, the retired `/kerst/` redirect, and basic Worker passthrough.
+`test/redirect.test.mjs` covers both custom domains serving content (no inter-host 301), the retired `/kerst/` redirect, and basic Worker passthrough.
 `test/layout.test.mjs` pins the hero date/headline order, the eyebrow caption styling, the absence of a
 reorder media-query split, and the `?v=` refs in `index.html`.
 `test/countdown.test.mjs` covers the shared rollover maths in `countdown.js`, including the

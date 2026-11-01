@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented here.
 
+## 0.2.7
+
+- **TTFB:** `almost-xmas.soholocal.nl` and `xmas.soholocal.nl` both serve the countdown (same Worker). The inter-host 301 is removed so document TTFB is a single edge fetch on either hostname; HTML/sitemap canonical URLs stay on `xmas.soholocal.nl`.
+- **TTFB:** Selective `run_worker_first` — only `/`, `/index.html`, and retired `/kerst` paths hit the Worker. CSS/JS/fonts/images are asset-first with `_headers` cache + security headers.
+- **LCP:** Self-host Fraunces + Jost (latin / latin-ext, opsz 144) and preload `fonts/fraunces-italic-latin.woff2` for `#headline`. Removes the render-blocking `fonts.googleapis.com` CSS chain. Noto Serif SC for `zh` still injects from `script.js` only when needed.
+- **LCP:** `version-tag.css` loads non-blocking (`media="print"` + `onload`); countdown scripts use `defer`.
+- `style.css?v=14`, `script.js?v=18`, `version-tag.css?v=2`, `version-tag.js?v=2`.
+
 ## 0.2.6
 
 - **Public repo links point at almost-xmas.** Changelog / release-notes URLs now use `https://github.com/a4ds5t/almost-xmas` (successor to `Xmas-Countdown`).
