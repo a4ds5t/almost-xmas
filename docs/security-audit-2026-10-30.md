@@ -1,6 +1,6 @@
 # Security-hygiene audit — 30 oktober 2026
 
-Project: **a4ds5t/almost-xmas** (migrated from a4ds5t/Xmas-Countdown)  
+Project: **a4ds5t/almost-xmas** (legacy checkout / audit was against **a4ds5t/Xmas-Countdown**)  
 Canonieke productie: **Cloudflare Worker** + **https://xmas.soholocal.nl**  
 Referentie-checklist: a4ds5t/Startpage PR #81 (commit `4c778fbf`)
 
