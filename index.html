@@ -26,15 +26,25 @@
     <meta property="og:image:alt" content="Almost Christmas: countdown tiles for days, hours, minutes and seconds on a pine-green background with Christmas baubles." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:creator" content="@a4ds5t" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- LCP face (#headline uses Fraunces italic). Same-origin preload starts the
+         display face without a third-party CSS discovery round-trip. -->
     <link
-      id="fonts-latin"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..600,100,0;1,9..144,400..600,100,1&family=Jost:wght@400;500;600&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="fonts/fraunces-italic-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
-    <link rel="stylesheet" href="style.css?v=13" />
-    <link rel="stylesheet" href="version-tag.css?v=1" />
+    <!-- fonts-latin: self-hosted Fraunces + Jost @font-face rules live in style.css -->
+    <link id="fonts-latin" rel="stylesheet" href="style.css?v=14" />
+    <!-- Footer version panel only; keep it off the critical path for LCP. -->
+    <link
+      rel="stylesheet"
+      href="version-tag.css?v=2"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript><link rel="stylesheet" href="version-tag.css?v=2" /></noscript>
   </head>
 
   <body>
@@ -122,10 +132,10 @@
         <small id="app-version-root" class="copyright"></small>
       </footer>
     </main>
-    <script src="build-info.js"></script>
-    <script src="version-tag.js?v=1"></script>
-    <script src="countdown.js"></script>
-    <script src="script.js?v=17"></script>
+    <script src="build-info.js" defer></script>
+    <script src="version-tag.js?v=2" defer></script>
+    <script src="countdown.js" defer></script>
+    <script src="script.js?v=18" defer></script>
     <!--
       Cloudflare Web Analytics (cookieless RUM) is NOT inlined here on purpose.
       Zone soholocal.nl already has the Web Analytics site provisioned with

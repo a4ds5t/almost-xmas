@@ -4,17 +4,18 @@
   // custom domain routes until Infra preview after Armand-go (Production UIT).
   //
   // Layout: static files at the repository root. Wrangler uploads that same
-  // root (`assets.directory`) with `run_worker_first` so every request hits the
-  // Worker for Observability, then static files via env.ASSETS.fetch.
+  // root (`assets.directory`) with selective `run_worker_first` so CSS/JS/fonts
+  // are served from ASSETS at the edge (better TTFB), while HTML navigations
+  // and retired /kerst paths still hit the Worker for Observability + redirects.
   // `.assetsignore` drops repo metadata from the asset upload.
   //
-  // Canonical hostname: xmas.soholocal.nl (HTML + sitemap). Legacy preview host
-  // is 301-redirected in worker.js; custom domain routes are added in a later go.
+  // Hosts: xmas.soholocal.nl (canonical in HTML/sitemap) and almost-xmas.soholocal.nl
+  // both map to this Worker and serve the same content (no inter-host 301).
   "name": "xmas-countdown",
   "main": "worker.js",
-  // Only the custom domain xmas.soholocal.nl serves this site. Without these two
-  // keys Wrangler defaults to publishing <name>.<subdomain>.workers.dev (world
-  // readable) and a preview URL for every version upload.
+  // Only the custom domains serve this site. Without these two keys Wrangler
+  // defaults to publishing <name>.<subdomain>.workers.dev (world readable) and
+  // a preview URL for every version upload.
   "workers_dev": false,
   "preview_urls": false,
   "compatibility_date": "2026-10-25",
@@ -25,7 +26,9 @@
   "assets": {
     "directory": "./",
     "binding": "ASSETS",
-    "run_worker_first": true,
+    // Worker-first for document + retired paths only. Everything else (CSS, JS,
+    // fonts, images) is asset-first so it skips Worker CPU and picks up _headers.
+    "run_worker_first": ["/", "/index.html", "/kerst", "/kerst/*"],
     "html_handling": "none"
   },
   "observability": {

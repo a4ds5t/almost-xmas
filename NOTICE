@@ -3,3 +3,7 @@ Required Notice: Copyright a4ds5t (https://github.com/a4ds5t)
 This software is licensed for noncommercial use under the PolyForm Noncommercial License 1.0.0 (SPDX: PolyForm-Noncommercial-1.0.0). See LICENSE.
 Commercial use requires a separate paid license from a4ds5t.
 Trademarks and domain names stay with a4ds5t.
+
+Third-party fonts (SIL Open Font License 1.1):
+- Fraunces — Copyright 2018 The Fraunces Project Authors (https://github.com/undercasetype/Fraunces). See fonts/OFL-Fraunces.txt.
+- Jost — Copyright 2020 The Jost Project Authors (https://github.com/indestructible-type/Jost). See fonts/OFL-Jost.txt.

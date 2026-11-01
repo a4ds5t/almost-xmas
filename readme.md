@@ -24,6 +24,6 @@ npm run dev     # http://127.0.0.1:8787
 
 Noncommercial use only, under the PolyForm Noncommercial License 1.0.0 (SPDX: `PolyForm-Noncommercial-1.0.0`). See [LICENSE](LICENSE) and [NOTICE](NOTICE). Commercial use needs a separate paid license. Trademarks and domain names stay with [a4ds5t](https://github.com/a4ds5t).
 
-## Canonical hostname
+## Hostnames
 
-`index.html`, `sitemap.xml`, and `robots.txt` use `https://xmas.soholocal.nl/`. The Worker returns a 301 to the same path and query on `xmas.soholocal.nl` when the request `Host` is `almost-xmas.soholocal.nl` (see `worker.js`).
+`index.html`, `sitemap.xml`, and `robots.txt` use the canonical origin `https://xmas.soholocal.nl/`. Both custom domains `xmas.soholocal.nl` and `almost-xmas.soholocal.nl` map to the same Worker (`xmas-countdown`) and serve the same assets (no inter-host 301), so document TTFB stays a single edge fetch on either host.

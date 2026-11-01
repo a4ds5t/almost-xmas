@@ -1,5 +1,5 @@
 // Texts per language
-const APP_VERSION = "0.2.6";
+const APP_VERSION = "0.2.7";
 const CHANGELOG_URL = "https://github.com/a4ds5t/almost-xmas/blob/main/CHANGELOG.md";
 const APP_BUILD_ISO = typeof BUILD_TIMESTAMP_ISO !== "undefined" ? BUILD_TIMESTAMP_ISO : null;
 const NOTO_SERIF_SC_HREF =

@@ -66,15 +66,16 @@ describe("eyebrow styling", () => {
 
 describe("cache-busting", () => {
   it("references bumped style.css, script.js, and version-tag assets", () => {
-    assert.match(html, /style\.css\?v=13/, "style.css query not bumped");
-    assert.match(html, /script\.js\?v=17/, "script.js query not bumped");
-    assert.match(html, /version-tag\.css\?v=1/, "version-tag.css query missing");
-    assert.match(html, /version-tag\.js\?v=1/, "version-tag.js query missing");
+    assert.match(html, /style\.css\?v=14/, "style.css query not bumped");
+    assert.match(html, /script\.js\?v=18/, "script.js query not bumped");
+    assert.match(html, /version-tag\.css\?v=2/, "version-tag.css query missing");
+    assert.match(html, /version-tag\.js\?v=2/, "version-tag.js query missing");
   });
 
-  it("carries no stale pre-0.2.6 query strings", () => {
-    assert.doesNotMatch(html, /style\.css\?v=1[12]/);
-    assert.doesNotMatch(html, /script\.js\?v=(13|14|15|16)/);
+  it("carries no stale pre-0.2.7 query strings", () => {
+    assert.doesNotMatch(html, /style\.css\?v=1[123]/);
+    assert.doesNotMatch(html, /script\.js\?v=(1[3-7])/);
+    assert.doesNotMatch(html, /version-tag\.css\?v=1(?:["'\s]|$)/);
   });
 });
 
@@ -87,8 +88,8 @@ describe("footer version UX", () => {
   });
 });
 
-describe("google fonts", () => {
-  it("loads Fraunces 400..600 + Jost by default, without Noto", () => {
+describe("self-hosted fonts", () => {
+  it("preloads the LCP Fraunces italic latin face and keeps fonts-latin on style.css", () => {
     assert.match(
       html,
       /id="fonts-latin"/,
@@ -96,14 +97,36 @@ describe("google fonts", () => {
     );
     assert.match(
       html,
-      /Fraunces:ital,opsz,wght,SOFT,WONK@0,9\.\.144,400\.\.600,100,0;1,9\.\.144,400\.\.600,100,1/
+      /rel="preload"[^>]*href="fonts\/fraunces-italic-latin\.woff2"/,
+      "LCP Fraunces italic must be preloaded"
     );
-    assert.match(html, /family=Jost:wght@400;500;600/);
+    assert.match(
+      html,
+      /id="fonts-latin"[^>]*href="style\.css\?v=\d+"/,
+      "Fraunces + Jost @font-face must ship via style.css, not Google Fonts CSS"
+    );
+    assert.doesNotMatch(
+      html,
+      /<link[^>]+fonts\.googleapis\.com/,
+      "latin fonts must not use render-blocking Google Fonts CSS"
+    );
     assert.doesNotMatch(
       html,
       /Noto\+Serif\+SC/,
       "Noto must not ship in the default render-blocking fonts link"
     );
+  });
+
+  it("declares self-hosted Fraunces + Jost @font-face in style.css", () => {
+    assert.match(css, /fonts\/fraunces-italic-latin\.woff2/);
+    assert.match(css, /fonts\/fraunces-normal-latin\.woff2/);
+    assert.match(css, /fonts\/jost-latin\.woff2/);
+    assert.match(css, /font-display:\s*swap/);
+  });
+
+  it("loads version-tag.css off the critical path", () => {
+    assert.match(html, /version-tag\.css\?v=2"[^>]*media="print"/);
+    assert.match(html, /onload="this\.media='all'"/);
   });
 });
 
