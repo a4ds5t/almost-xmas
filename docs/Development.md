@@ -65,9 +65,8 @@ static assets with caching, and the HTML is what busts it, so **every change to 
 asset must ship with a bumped `?v=` in `index.html`** in the same commit (`style.css?v=11` →
 `?v=12`). Without the bump, returning visitors keep the cached old file and the change is invisible
 to them — exactly the audience a countdown site has. Bump only assets whose content actually
-changed; `countdown.js`, `version-tag.js` and `version-tag.css` carry no query string today and
-should get one if they start changing often. `build-info.js` is generated per deploy and must not
-be versioned.
+changed. `countdown.js` is stable today; `version-tag.js` / `version-tag.css` carry `?v=` when
+they change (as of 0.2.6). `build-info.js` is generated per deploy and must not be versioned.
 
 ## Countdown logic
 `countdown.js` is the single source of the Christmas rollover. `getChristmasTarget(now)` returns
@@ -132,7 +131,7 @@ reorder media-query split, and the `?v=` refs in `index.html`.
 
 Bump `APP_VERSION` in `script.js`, `version` in `package.json`, and add a section to `CHANGELOG.md`.
 Also bump the `?v=` query on any `.css`/`.js` asset you changed (see *Asset cache-busting* above).
-See `docs/version-tag.md` for the footer version panel.
+See `docs/version-tag.md` for the copyright-line version reveal (version stays off-page until clicked).
 
 ## Kerst hero page
 
