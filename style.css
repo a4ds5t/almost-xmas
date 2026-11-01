@@ -480,9 +480,3 @@ footer > p {
   /* 0.55 alpha keeps ~5:1 contrast on the pine background; 0.26 was ~2.2:1 */
   color: rgba(246, 239, 224, 0.55);
 }
-
-.footer-version {
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  color: rgba(246, 239, 224, 0.55);
-}
