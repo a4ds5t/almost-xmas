@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here.
 
+## 0.2.6
+
+- **Public repo links point at almost-xmas.** Changelog / release-notes URLs now use `https://github.com/a4ds5t/almost-xmas` (successor to `Xmas-Countdown`).
+- **Version number hidden on the page.** The copyright/credit line is a subtle control; activating it reveals `v{version}`, the build timestamp, and a link to release notes. The old always-visible `v0.2.x` footer tag is gone.
+- `style.css?v=13`, `script.js?v=17`, `version-tag.css?v=1`, and `version-tag.js?v=1` bumped in `index.html`.
+
+## 0.2.5
+
+- **Google Fonts load tightened.** The default stylesheet is Fraunces (`wght` 400..600) + Jost only. Noto Serif SC (`500;700`) is injected only when the page language is Chinese (`zh`), so EN/NL/ES no longer download ~200 unused CJK `@font-face` rules.
+- `script.js?v=16` bumped in `index.html`.
+
 ## 0.2.4
 
 Audit fixes from `docs/public-repo-audit.md`. No visual or behavioural change to the page itself — the only user-visible difference is the `build-info.js` timestamp, so `style.css`, `script.js`, `countdown.js`, `version-tag.css` and `version-tag.js` keep their `?v=` values.
